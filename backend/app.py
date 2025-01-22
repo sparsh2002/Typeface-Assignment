@@ -9,7 +9,8 @@ import os
 from io import BytesIO
 from database.connection import db_connect
 
-from controller.auth_blueprint import get_auth_blueprint
+from controller.auth_controller import get_auth_blueprint
+from controller.user_controller import get_user_blueprint
 
 from dotenv import load_dotenv
 
@@ -40,6 +41,8 @@ def home():
 
 
 app.register_blueprint(get_auth_blueprint(db, User, bcrypt, jwt) , url_prefix="/api/auth")
+
+app.register_blueprint(get_user_blueprint(User , jwt) , url_prefix="/api/users")
 
 
 if __name__ == '__main__':
