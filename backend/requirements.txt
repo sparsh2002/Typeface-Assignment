@@ -5,3 +5,4 @@ flask-sqlalchemy
 psycopg2-binary
 boto3
 flask-bcrypt
+python-dotenv
