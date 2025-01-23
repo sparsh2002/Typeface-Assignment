@@ -54,19 +54,18 @@ def get_user_files(User , File ,s3_client, db, user_id):
     }
 
 @log_function_params(
-        # skip=['User', 'File' , 's3_client']
-        skip=[]
+        skip=['User', 'File' , 's3_client', 'db']
+        # skip=[]
 )
 def upload_file_to_user_space(User, File ,s3_client, db , user_id):
+    logger.info(f'upload_file_to_user_space:init')
     file = request.files['file']
-    logger.info(file)
+    # logger.info(file)
     if not file or not allowed_file(file.filename):
+        logger.error('Invalid file format!')
         return {'message': 'Invalid file format'}
 
-
     s3_key = f"{user_id}/{file.filename}"
-    # s3_key="myfile"
-
     logger.info(s3_key)
     logger.info(S3_BUCKET)
     try:
@@ -77,7 +76,7 @@ def upload_file_to_user_space(User, File ,s3_client, db , user_id):
             )
         logger.info(response)
     except Exception as e:
-        logger.error(e)
+        logger.error("Some error occured with S3 bucket")
         return None
 
     new_file = File(user_id=user_id, file_name=file.filename, s3_key=s3_key)
