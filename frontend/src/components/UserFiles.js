@@ -7,6 +7,8 @@ function UserFiles() {
   const [files, setFiles] = useState([]);
   const [file, setFile] = useState(null);
   const [previewFile, setPreviewFile] = useState(null);
+  const [fileDetails, setFileDetails] = useState(null)
+  const [tg, setTg] = useState(false)
 
   const fetchFiles = async () => {
     try {
@@ -43,6 +45,18 @@ function UserFiles() {
     fetchFiles();
   }, [userId]);
 
+  async function getFileUrl(){
+    if(previewFile!=null){
+      const response =  await api.get(`/users/${userId}/files/${previewFile.id}`);
+      console.log(response.data)
+      setFileDetails(response.data)
+    }
+  }
+  useEffect( ()=>{
+    getFileUrl()
+    
+  }, [previewFile])
+
   const renderFilePreview = () => {
     if (!previewFile) return <p>Select a file to preview</p>;
 
@@ -50,16 +64,18 @@ function UserFiles() {
     const imageExtensions = ['jpg', 'png'];
 
     console.log(previewFile)
+    console.log(fileDetails)
 
     if (imageExtensions.includes(extension)) {
       return (
         <div className="mt-4">
           <h3 className="font-bold">Image Preview</h3>
           <img 
-            src={previewFile.url} 
+            src={fileDetails?.url} 
             alt={previewFile.file_name} 
-            className="max-w-full max-h-96 object-contain"
+            className="max-w-20 max-h-10"
           />
+          <p>{fileDetails?.url}</p>
         </div>
       );
     }
@@ -68,7 +84,7 @@ function UserFiles() {
     return (
       <div className="mt-4">
         <a 
-          href={previewFile.url} 
+          href={fileDetails.url} 
           target="_blank" 
           rel="noopener noreferrer" 
           className="text-blue-600 hover:underline"
@@ -78,6 +94,8 @@ function UserFiles() {
       </div>
     );
   };
+
+ 
 
 
   return (
@@ -89,7 +107,10 @@ function UserFiles() {
               <li 
                 key={f.id} 
                 className="flex items-center justify-between p-2 border rounded hover:bg-gray-100 cursor-pointer"
-                onClick={() => setPreviewFile(f)}
+                onClick={() => {
+                  setPreviewFile(f) 
+                  // ;setTg(!tg) 
+                }}
               >
                 <div className="flex items-center">
                   {/* {getFileIcon(f.file_name)} */}

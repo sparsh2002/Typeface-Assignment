@@ -91,17 +91,21 @@ def upload_file_to_user_space(User, File ,s3_client, db , user_id):
         "s3_key":s3_key
     }
 
+@log_function_params(skip=['Files', 's3_client'])
 def generate_presigned_url(Files, s3_client, object_id):
     file=  Files.query.filter_by(id=object_id).first()
+    logger.info(file)
     s3_key= file.s3_key
+    logger.info(s3_key)
     try:
         response = s3_client.generate_presigned_url('get_object',
                                                     Params={
                                                         'Bucket': S3_BUCKET,
                                                         'Key': s3_key
                                                     },
-                                                    ExpiresIn=3600)
-        return  { "file_url": response}
+                                                    ExpiresIn=360000)
+        logger.info(response)
+        return  { "url": response}
     except NoCredentialsError:
         print("Error: AWS credentials not found.")
     except Exception as e:
