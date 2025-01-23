@@ -5,11 +5,13 @@ from util.constants import allowed_file
 import os
 from dotenv import load_dotenv
 from util.logger import logger, log_function_params
+from botocore.exceptions import NoCredentialsError
 
 load_dotenv()
 
 
 S3_BUCKET=os.getenv('S3_BUCKET')
+
 
 def get_users(User):
     logger.info('get_users:init')
@@ -88,3 +90,21 @@ def upload_file_to_user_space(User, File ,s3_client, db , user_id):
         "file_name":file.filename,
         "s3_key":s3_key
     }
+
+def generate_presigned_url(Files, s3_client, object_id):
+    file=  Files.query.filter_by(id=object_id).first()
+    s3_key= file.s3_key
+    try:
+        response = s3_client.generate_presigned_url('get_object',
+                                                    Params={
+                                                        'Bucket': S3_BUCKET,
+                                                        'Key': s3_key
+                                                    },
+                                                    ExpiresIn=3600)
+        return  { "file_url": response}
+    except NoCredentialsError:
+        print("Error: AWS credentials not found.")
+    except Exception as e:
+        print(f"Error generating presigned URL: {e}")
+
+    return None

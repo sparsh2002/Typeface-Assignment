@@ -6,6 +6,7 @@ function UserProfile() {
   const { userId } = useParams();
   const navigate = useNavigate();
   const [profile, setProfile] = useState(null);
+  const [previewFile, setPreviewFile] = useState(null);
 
   const fetchProfile = async () => {
     try {

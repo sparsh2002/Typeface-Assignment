@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask import request, jsonify
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from service.user_service import get_users, get_user_profile , get_user_files, upload_file_to_user_space
+from service.user_service import get_users, get_user_profile , get_user_files, upload_file_to_user_space, generate_presigned_url
 from util.logger import logger
 
 def get_user_blueprint(User , File ,db, s3_client ,jwt):
@@ -47,5 +47,16 @@ def get_user_blueprint(User , File ,db, s3_client ,jwt):
             return jsonify(response) , 200
         except Exception as e:
             return jsonify({"error": "some error occured file uploading file"}) , 500
-
+        
+    @user_blueprint.route('/<int:user_id>/files/<int:file_id>', methods=['GET', 'POST'])
+    @jwt_required()
+    def generate_file_url_controller(user_id , file_id):
+        current_user = get_jwt_identity()
+        if current_user != str(user_id):
+            return jsonify({'message': 'Unauthorized'}), 403
+        try:
+            response = generate_presigned_url(File ,s3_client, file_id)
+            return jsonify(response) , 200
+        except Exception as e:
+            return jsonify({"error": "some error occured file fetching file"}) , 500
     return user_blueprint
