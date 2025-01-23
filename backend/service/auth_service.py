@@ -27,5 +27,5 @@ def login(User, bcrypt):
     if not user or not bcrypt.check_password_hash(user.password, password):
         return jsonify({'message': 'Invalid credentials'}), 401
 
-    access_token = create_access_token(identity=user.id, expires_delta=datetime.timedelta(days=1))
+    access_token = create_access_token(identity=str(user.id), expires_delta=datetime.timedelta(days=1))
     return jsonify({'access_token': access_token}), 200

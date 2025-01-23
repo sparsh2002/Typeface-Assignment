@@ -17,3 +17,17 @@ def get_users(User):
         'pages': users_paginated.pages,
         'current_page': users_paginated.page,
     }
+
+
+def get_user_profile(User, user_id):
+    user = User.query.filter_by(id=user_id).first()
+
+    if not user:
+        logger.warning(f"User with id {user_id} not found.")
+        return None
+    return  {
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+    }
+    

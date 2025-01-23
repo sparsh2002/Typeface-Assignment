@@ -41,7 +41,6 @@ def home():
 
 
 app.register_blueprint(get_auth_blueprint(db, User, bcrypt, jwt) , url_prefix="/api/auth")
-
 app.register_blueprint(get_user_blueprint(User , jwt) , url_prefix="/api/users")
 
 
