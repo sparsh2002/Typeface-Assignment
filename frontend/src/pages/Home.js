@@ -5,8 +5,10 @@ import Button from '@mui/material/Button';
 
 function Home() {
   return (
-    <div>
-      <h1 style={{display:"flex" , justifyContent:"center", alignItems:"center"}}>Welcome to Dropbox App - Typeface</h1>
+    <div style={{display:"flex", flexDirection:'column' , justifyContent:"center", alignItems:"center"}}>
+      <h1 >Welcome to Dropbox App - Typeface</h1>
+      <img width={1000} src="https://cfl.dropboxstatic.com/static/metaserver/static/images/logo_catalog/dropbox_opengraph_image%402x.png" />
+      <br/>
       <div style={{
         display:"flex" , 
         flexDirection:'column' ,
