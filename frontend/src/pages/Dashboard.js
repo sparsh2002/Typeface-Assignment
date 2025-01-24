@@ -7,7 +7,7 @@ import UserFiles from '../components/UserFiles';
 function Dashboard() {
   return (
     <div>
-      <h1>Dashboard</h1>
+      <h1 style={{display:"flex" , justifyContent:"center", alignItems:"center"}}>Dashboard</h1>
       <Routes>
         <Route path="/users" element={<Users />} />
         <Route path="/users/:userId/profile" element={<UserProfile />} />
