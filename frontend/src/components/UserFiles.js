@@ -1,6 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../api/api';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import FolderIcon from '@mui/icons-material/Folder';
+import DeleteIcon from '@mui/icons-material/Delete';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import Input from '@mui/material/Input';
+
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 function UserFiles() {
   const { userId } = useParams();
@@ -8,7 +41,11 @@ function UserFiles() {
   const [file, setFile] = useState(null);
   const [previewFile, setPreviewFile] = useState(null);
   const [fileDetails, setFileDetails] = useState(null)
-  const [tg, setTg] = useState(false)
+
+  const Demo = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+  }));
+  
 
   const fetchFiles = async () => {
     try {
@@ -71,11 +108,11 @@ function UserFiles() {
         <div className="mt-4">
           <h3 className="font-bold">Image Preview</h3>
           <img 
+            width={400}
             src={fileDetails?.url} 
             alt={previewFile.file_name} 
             className="max-w-20 max-h-10"
           />
-          <p>{fileDetails?.url}</p>
         </div>
       );
     }
@@ -95,38 +132,42 @@ function UserFiles() {
     );
   };
 
- 
+  const [dense, setDense] = React.useState(false);
+  const [secondary, setSecondary] = React.useState(false);
 
 
   return (
-    <div>
+    <div style={{margin:'auto', width:'50vw'}}>
      <div>
-          <h3 className="text-xl mb-2">File List</h3>
-          <ul className="space-y-2">
-            {files.map((f) => (
-              <li 
-                key={f.id} 
-                className="flex items-center justify-between p-2 border rounded hover:bg-gray-100 cursor-pointer"
-                onClick={() => {
-                  setPreviewFile(f) 
-                  // ;setTg(!tg) 
-                }}
-              >
-                <div className="flex items-center">
-                  {/* {getFileIcon(f.file_name)} */}
-                  {f.file_name}
-                </div>
-                <a 
-                  href={f.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-blue-500 hover:underline"
+          <h3 className="text-xl mb-2">User Files</h3>
+          <Grid item xs={12} md={6}>
+          <Demo>
+            <List dense={dense}>
+              {files.map(f => <ListItem
+                  onClick={() => {
+                    setPreviewFile(f) 
+                  }}
+                  secondaryAction={
+                    <IconButton   href={f.url}  edge="end" aria-label="delete">
+                      <RemoveRedEyeIcon />
+                    </IconButton>
+                  }
                 >
-                  Download
-                </a>
-              </li>
-            ))}
-          </ul>
+                  <ListItemAvatar>
+                    <Avatar>
+                      <FolderIcon />
+                    </Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={f.file_name}
+                    secondary={secondary ? 'Secondary text' : null}
+                  />
+                </ListItem>) 
+              }
+            </List>
+          </Demo>
+        </Grid>
+          
       </div>
       <div>
           <h3 className="text-xl mb-2">File Preview</h3>
@@ -139,12 +180,27 @@ function UserFiles() {
           onChange={(e) => setFile(e.target.files[0])} 
           className="mb-2"
         />
-        <button 
+        <Button 
+          variant='contained'
           type="submit" 
         >
           Upload
-        </button>
-      </form>
+        </Button>
+      </form> 
+      {/* <Button
+      component="label"
+      role={undefined}
+      variant="contained"
+      tabIndex={-1}
+      startIcon={<CloudUploadIcon />}
+    >
+      Upload file
+      <VisuallyHiddenInput
+        type="file"
+        onChange={(e) => setFile(e.target.files[0])} 
+        multiple
+      />
+    </Button> */}
     </div>
   );
 }
