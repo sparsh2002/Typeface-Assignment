@@ -23,7 +23,7 @@ function Login() {
   };
 
   return (
-    <Card style={{width:550 , height:300 , margin:'auto', marginTop:'30vh'}}>
+    <Card style={{width:550 , height:320 , margin:'auto', marginTop:'30vh'}}>
       <CardContent>
         <form onSubmit={handleLogin} style={{display:'flex' , flexDirection:"column" , width:500, rowGap:18}}>
           <TextField id="outlined-basic" label="Username" variant="outlined" type="text"
@@ -37,6 +37,8 @@ function Login() {
           <br />
           <Button variant="contained" type="submit">Login</Button>
         </form>
+        <br/>
+        <Button href='/signup' style={{float:'right', marginRight:10}} >SignUp?</Button>
       </CardContent>
     </Card>
     
