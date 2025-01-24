@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 import api from '../api/api';
 import { useNavigate } from 'react-router-dom';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 function Login() {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
@@ -18,21 +23,23 @@ function Login() {
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <input
-        type="text"
-        placeholder="Username"
-        value={credentials.username}
-        onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={credentials.password}
-        onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
-      />
-      <button type="submit">Login</button>
-    </form>
+    <Card style={{width:550 , height:300 , margin:'auto', marginTop:'30vh'}}>
+      <CardContent>
+        <form onSubmit={handleLogin} style={{display:'flex' , flexDirection:"column" , width:500, rowGap:18}}>
+          <TextField id="outlined-basic" label="Username" variant="outlined" type="text"
+            placeholder="Username"
+            value={credentials.username}
+            onChange={(e) => setCredentials({ ...credentials, username: e.target.value })} />
+          <TextField id="outlined-basic" label="Password" variant="outlined"  type="password"
+            placeholder="Password"
+            value={credentials.password}
+            onChange={(e) => setCredentials({ ...credentials, password: e.target.value })} />
+          <br />
+          <Button variant="contained" type="submit">Login</Button>
+        </form>
+      </CardContent>
+    </Card>
+    
   );
 }
 
